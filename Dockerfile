@@ -1,28 +1,38 @@
-# Use Microsoft SQL Server 2019
-FROM mcr.microsoft.com/mssql/server:2019-latest
+# Stage 1: Tools installer
+FROM ubuntu:20.04 as tools
 
-# Set environment variables
-ENV ACCEPT_EULA=Y
-ENV SA_PASSWORD=Sirajsql4041!
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install sqlcmd
 RUN apt-get update && \
-    apt-get install -y curl gnupg2 apt-transport-https && \
+    apt-get install -y curl gnupg apt-transport-https software-properties-common && \
     curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
     apt-get update && \
     ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev && \
     ln -s /opt/mssql-tools/bin/sqlcmd /usr/bin/sqlcmd
 
-# Copy backup and script
+# Stage 2: SQL Server base
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=Sirajsql4041!
+
+# Set working directory
+WORKDIR /var/opt/mssql/restore
+
+# Copy tools from previous stage
+COPY --from=tools /opt/mssql-tools /opt/mssql-tools
+COPY --from=tools /usr/bin/sqlcmd /usr/bin/sqlcmd
+
+# Copy backup file and entrypoint
 COPY HMS.bak /HMS.bak
 COPY entrypoint.sh /entrypoint.sh
 
-# Ensure script is executable
+# Make the script executable
 RUN chmod +x /entrypoint.sh
 
 # Expose SQL Server port
 EXPOSE 1433
 
-# Start with your script
+# Run the script to restore the DB
 ENTRYPOINT ["/entrypoint.sh"]
