@@ -29,8 +29,8 @@ COPY --from=tools /usr/bin/sqlcmd /usr/bin/sqlcmd
 COPY HMS.bak ./HMS.bak
 COPY entrypoint.sh ./entrypoint.sh
 
-# Ensure entrypoint script is executable (locally, or do it here if needed)
-RUN chmod +x ./entrypoint.sh
+# # Ensure entrypoint script is executable (locally, or do it here if needed)
+# RUN chmod +x ./entrypoint.sh
 
 # Expose SQL Server port
 EXPOSE 1433
