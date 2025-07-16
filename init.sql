@@ -1,0 +1,13 @@
+CREATE DATABASE HospitalDB;
+GO
+
+USE HospitalDB;
+GO
+
+CREATE TABLE Patients (
+    PatientId INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(100),
+    Age INT,
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+GO
