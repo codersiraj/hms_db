@@ -1,5 +1,5 @@
 # Use Microsoft SQL Server 2022 image
-FROM mcr.microsoft.com/mssql/server:2022-lts
+FROM mcr.microsoft.com/mssql/server:2019-latest
 
 # Set environment variables
 ENV ACCEPT_EULA=Y
