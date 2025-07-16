@@ -2,6 +2,7 @@
 
 set -e
 
+# Start SQL Server in the background
 /opt/mssql/bin/sqlservr &
 
 echo "⏳ Waiting for SQL Server to start..."
@@ -9,7 +10,7 @@ sleep 20
 
 DB_NAME="HMS"
 SA_PASSWORD="Sirajsql4041!"
-BAK_FILE="/HMS.bak"
+BAK_FILE="/usr/src/app/HMS.bak"
 
 if [ ! -f "$BAK_FILE" ]; then
   echo "❌ Backup file not found: $BAK_FILE"
@@ -42,5 +43,5 @@ MOVE '$LOG_LOGICAL' TO '/var/opt/mssql/data/$DB_NAME.ldf',
 REPLACE;
 "
 
-echo "✅ Restore complete. Keeping SQL Server running..."
+echo "✅ Restore complete. Waiting for SQL Server..."
 wait
