@@ -10,9 +10,6 @@ WORKDIR /var/opt/mssql/restore
 COPY HMS.bak /HMS.bak
 COPY entrypoint.sh /entrypoint.sh
 
-# Ensure script is executable
-RUN chmod +x /entrypoint.sh
-
 # Expose default SQL Server port
 EXPOSE 1433
 
